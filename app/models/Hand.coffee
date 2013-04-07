@@ -2,22 +2,24 @@ class window.Hand extends Backbone.Collection
 
   model: Card
 
-  initialize: (array, @deck, @isDealer) ->
+  initialize: (array, @deck, @isDealer, @discard) ->
     @on 'add', => @check()
     @model
 
+  discard: ->
+    # current cards moved to discard
+    # @discard.push(@cards.pop())
+
   hit: ->
-    @add(@deck.pop()).last() unless (_(@scores()).every (score) -> score > 21)
+    @add(@deck.pop()).last() unless (@scores().every (score) -> score > 21)
 
   check: ->
     if @length is 2 and @scores()[1] is 21
       @trigger('blackjack')
-    else if (_(@scores()).every (score) -> score > 21)
-      console.log('triggered loss')
+    else if(@scores().every (score) -> score > 21)
       @trigger('lose', this)
 
   stand: ->
-    console.log('called stand')
     @trigger('endTurn', this)
 
   scores: ->
