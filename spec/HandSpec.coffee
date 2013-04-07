@@ -3,6 +3,11 @@ describe "Hand",(hand) ->
   beforeEach ->
     hand = new Hand([new Card({rank:9, suit: 0}), new Card({rank:8, suit:0})], null, false)
 
+  it "triggers 'endTurn' when player 'stands'", ->
+    spyOn(hand, 'trigger').andCallThrough()
+    hand.stand()
+    expect(hand.trigger).toHaveBeenCalledWith('endTurn', hand)
+
   it "calls checkScore every time you add", ->
     spyOn(hand, 'check').andCallThrough()
     hand.add(new Card({rank:5, suit:0}))
@@ -12,12 +17,12 @@ describe "Hand",(hand) ->
     spyOn(hand, 'trigger').andCallThrough()
     expect(hand.scores()).toEqual([17])
     hand.add(new Card({rank:10, suit:0}))
-    expect(hand.trigger).toHaveBeenCalledWith('lose')
+    expect(hand.trigger).toHaveBeenCalledWith('lose', hand)
 
   it "doesn't trigger 'lose' for hands with aces", ->
     spyOn(hand, 'trigger').andCallThrough()
     hand.add(new Card({rank:1, suit:0}))
-    expect(hand.trigger).not.toHaveBeenCalledWith('lose')
+    expect(hand.trigger).not.toHaveBeenCalledWith('lose', hand)
 
   describe "with blackjack", ->
     beforeEach ->
