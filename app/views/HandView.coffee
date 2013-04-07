@@ -7,8 +7,8 @@ class window.HandView extends Backbone.View
 
   initialize: ->
     #TODO: why doesn't 'add' trigger 'change'?
-    @collection.on 'change', => @render
-    @collection.on 'add', => @render
+    @collection.on 'change', => @render()
+    @collection.on 'add', => @render()
     @render()
 
   render: ->

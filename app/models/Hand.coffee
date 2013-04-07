@@ -3,8 +3,17 @@ class window.Hand extends Backbone.Collection
   model: Card
 
   initialize: (array, @deck, @isDealer) ->
+    @on 'add', =>
+      @check()
 
-  hit: -> @add(@deck.pop()).last()
+  hit: ->
+    @add(@deck.pop()).last() unless (_(@scores()).every (score) -> score > 21)
+
+  check: ->
+    if @length is 2 and @scores()[1] is 21
+      @trigger('blackjack')
+    else if (_(@scores()).every (score) -> score > 21)
+      @trigger('lose')
 
   scores: ->
     # The scores are an array of potential scores.
