@@ -9,7 +9,6 @@ class window.CardView extends Backbone.View
     @render()
 
   render: ->
-    console.log(@model.get('left') + 'px', @model.get('top') + 'px')
     @$el.children().detach().end().html
     @$el.html @template @model.attributes
     if(@model.get 'revealed')

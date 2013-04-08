@@ -25,8 +25,6 @@ class window.App extends Backbone.Model
     playerScore = @get('playerHand').getBestScore()
     dealerScore = @get('dealerHand').getBestScore()
 
-    console.log(playerScore, dealerScore)
-
     if(playerScore > dealerScore)
       @gameOver(@get('dealerHand'))
     else if(dealerScore > playerScore)
@@ -44,14 +42,13 @@ class window.App extends Backbone.Model
 
   gameOver: (hand) ->
     if(hand is @get('dealerHand'))
-      @set 'status', 'win' 
+      @set 'status', 'won' 
     else if(hand is @get('playerHand'))
-      @set 'status', 'loss'
+      @set 'status', 'lost'
     else
-      @set 'status', 'tie'
+      @set 'status', 'tied'
 
     @set 'isGameOver', true
-    # @newRound()
 
   blackJack: ->
     console.log('blackjack')
@@ -63,6 +60,10 @@ class window.App extends Backbone.Model
     @get('playerHand').deal()
     @get('dealerHand').deal()
 
+    @set('isDealerTurn', false)
+    @set('isGameOver', false)
+    @set('status', '')
+
   dealerStart: ->
     @set 'isDealerTurn', true
     @get('dealerHand').each (card) ->
@@ -73,5 +74,3 @@ class window.App extends Backbone.Model
       @get('dealerHand').hit()
 
     @get('dealerHand').stand()
-
-    # console.log 'End dealer turn'

@@ -44,6 +44,7 @@
 
 .hand {
   overflow: auto;
+  width: 100%;
 }
 
 div.status {
@@ -55,7 +56,6 @@ div.status {
   padding: 5px;
   border-radius: 19px;
   -webkit-animation-iteration-count: infinite;
-  /*-webkit-animation-delay: s;*/
   -webkit-animation-duration: 3s;
   margin-right: 39%;
 }

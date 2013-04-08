@@ -14,7 +14,5 @@ class window.Deck extends Backbone.Collection
   dealDealer: (discard) -> new Hand [ @pop().flip(), @pop() ], @, true, discard
 
   checkSize: (deck) ->
-    console.log('checking size')
     if @length < 15
-      console.log('NO MO Cards')
       @trigger 'runningLow', @

@@ -35,17 +35,17 @@ describe "App", ->
 
     it "sets the status for player loss", ->
       app.gameOver(app.get('playerHand'))
-      expect(app.get('status')).toEqual('loss')
+      expect(app.get('status')).toEqual('lost')
       expect(app.get('isGameOver')).toBe(true)
 
     it "sets the status for player win", ->
       app.gameOver(app.get('dealerHand'))
-      expect(app.get('status')).toEqual('win')
+      expect(app.get('status')).toEqual('won')
       expect(app.get('isGameOver')).toBe(true)
 
     it "sets the status for tie", ->
       app.gameOver()
-      expect(app.get('status')).toEqual('tie')
+      expect(app.get('status')).toEqual('tied')
       expect(app.get('isGameOver')).toBe(true)
 
   describe "newRound", (oldPlayerHand, oldDealerHand, playerHand, dealerHand) ->
