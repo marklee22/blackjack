@@ -1,3 +1,25 @@
+.main {
+  background-color: #FAEBD7;
+}
+
+#left {
+  background: url('../img/suites.png') 0 0 / 200;
+  padding: 0;
+  margin-right: 20px;
+  float: left;
+  width: 200px;
+  height: 100%;
+}
+
+#right {
+  background: url('../img/suites.png') 0 0 / 200;
+  padding: 0;
+  margin-left: 20px;
+  float:right;
+  width: 200px;
+  height: 100%;
+}
+
 .card {
   float: left;
   background-image: url('../img/cards.jpg');
@@ -9,6 +31,12 @@
   color: red;
 }
 
+.container {
+  padding-top: 30px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
 .covered {
   background-color: black;
   background-image: none;
@@ -16,4 +44,18 @@
 
 .hand {
   overflow: auto;
+}
+
+div.status {
+  float: right;
+  color: white;
+  font-size: 23px;
+  width: 200px;
+  text-align: center;
+  padding: 5px;
+  border-radius: 19px;
+  -webkit-animation-iteration-count: infinite;
+  /*-webkit-animation-delay: s;*/
+  -webkit-animation-duration: 3s;
+  margin-right: 39%;
 }
