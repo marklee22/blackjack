@@ -22,16 +22,33 @@ describe "App", ->
     dealerHand = app.get('dealerHand')
     expect(dealerHand.trigger).toHaveBeenCalledWith('endTurn', dealerHand)
 
-  it "gameOver is called when dealerHand endTurn is triggered", ->
-    app.dealerStart()
-    expect(app.gameOver).toHaveBeenCalled()
+  describe "gameOver", ->
 
-  it "gameOver evaluates the player and dealer hands", ->
-    expect(app.get('gameOver')).toBe(false)
-    app.gameOver()
-    expect(app.get('gameOver')).toBe(true)
+    it "is called when dealerHand endTurn is triggered", ->
+      app.dealerStart()
+      expect(app.gameOver).toHaveBeenCalled()
 
-  describe "New rounds on the same deck", (oldPlayerHand, oldDealerHand, playerHand, dealerHand) ->
+    it "evaluates the player and dealer hands", ->
+      expect(app.get('isGameOver')).toBe(false)
+      app.gameOver()
+      expect(app.get('isGameOver')).toBe(true)
+
+    it "sets the status for player loss", ->
+      app.gameOver(app.get('playerHand'))
+      expect(app.get('status')).toEqual('loss')
+      expect(app.get('isGameOver')).toBe(true)
+
+    it "sets the status for player win", ->
+      app.gameOver(app.get('dealerHand'))
+      expect(app.get('status')).toEqual('win')
+      expect(app.get('isGameOver')).toBe(true)
+
+    it "sets the status for tie", ->
+      app.gameOver()
+      expect(app.get('status')).toEqual('tie')
+      expect(app.get('isGameOver')).toBe(true)
+
+  describe "newRound", (oldPlayerHand, oldDealerHand, playerHand, dealerHand) ->
 
     beforeEach ->
       oldPlayerHand = app.get('playerHand').clone()
@@ -40,26 +57,28 @@ describe "App", ->
       dealerHand = app.get('dealerHand')
       app.gameOver()
 
+    it "discards all cards in play to the discard pile", ->
+      expect(app.get('discardPile').length).toEqual(0)
+      app.newRound()
+      expect(app.get('discardPile').length).toEqual(4)
 
+    it "deals new cards", ->
+      app.newRound()
+      expect(app.get('playerHand').length).toEqual(2)
+      expect(app.get('dealerHand').length).toEqual(2)
+      expect(app.get('dealerHand').at(0).get('revealed')).toBe(false)
+
+    it "called multiple times", ->
+      app.newRound()
+      app.newRound()
+      expect(app.get('discardPile').length).toEqual(8)
+      expect(app.get('deck').length).toEqual(40)
 
     xit "sets isDealer turn to false", ->
 
     xit "sets gameOver to false", ->
 
     xit "preserves the same deck for the new game", ->
-
-  xdescribe "management of discarded cards", ->
-
-    it "playerHand and dealerHand now have different cards", ->
-      app.newRound()
-      # check discard pile === 4
-      # check deck size === 52 - 4 - 4
-      # check cards in hand are correct
-        # 2 cards each
-        # dealer first card isn't revealed
-      # check total cards === 52
-
-
 
   describe "dealer AI", ->
     dealer = null

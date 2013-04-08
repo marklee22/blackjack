@@ -2,13 +2,22 @@ class window.Hand extends Backbone.Collection
 
   model: Card
 
-  initialize: (array, @deck, @isDealer, @discard) ->
+  initialize: (array, @deck, @isDealer, @discardPile) ->
     @on 'add', => @check()
     @model
 
   discard: ->
     # current cards moved to discard
-    # @discard.push(@cards.pop())
+    while @length > 0
+      @discardPile.add(@pop())
+
+  deal: ->
+    if @isDealer
+      @add(@deck.pop().set('revealed', false))
+    else
+      @add(@deck.pop())
+
+    @add(@deck.pop()).last()
 
   hit: ->
     @add(@deck.pop()).last() unless (@scores().every (score) -> score > 21)
@@ -21,6 +30,15 @@ class window.Hand extends Backbone.Collection
 
   stand: ->
     @trigger('endTurn', this)
+
+  getBestScore: ->
+    scores = @scores()
+
+    if(scores.length is 1)
+      return scores[0]
+    else
+      return Math.max.apply null, scores.filter (score) ->
+        score <= 21
 
   scores: ->
     # The scores are an array of potential scores.

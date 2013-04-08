@@ -3,12 +3,18 @@ class window.Deck extends Backbone.Collection
   model: Card
 
   initialize: ->
+    @on 'remove', @checkSize, @
     @add _(_.range(1, 53)).shuffle().map (card) ->
       new Card
         rank: card % 13
-        suit: Math.floor(card / 13)
-    @set 'discardPile', new Discard()
+        suit: if card > 51 then 3 else Math.floor(card / 13)
 
-  dealPlayer: -> hand = new Hand [ @pop(), @pop() ], @, false, @discardPile
+  dealPlayer: (discard) -> hand = new Hand [ @pop(), @pop() ], @, false, discard
 
-  dealDealer: -> new Hand [ @pop().flip(), @pop() ], @, true, @discardPile
+  dealDealer: (discard) -> new Hand [ @pop().flip(), @pop() ], @, true, discard
+
+  checkSize: (deck) ->
+    console.log('checking size')
+    if @length < 15
+      console.log('NO MO Cards')
+      @trigger 'runningLow', @

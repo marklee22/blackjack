@@ -1,7 +1,7 @@
 describe "Hand",(hand) ->
 
   beforeEach ->
-    hand = new Hand([new Card({rank:9, suit: 0}), new Card({rank:8, suit:0})], null, false)
+    hand = new Hand([new Card({rank:9, suit: 0}), new Card({rank:8, suit:0})], new Deck(), false, new DiscardPile())
 
   it "triggers 'endTurn' when player 'stands'", ->
     spyOn(hand, 'trigger').andCallThrough()
@@ -23,6 +23,16 @@ describe "Hand",(hand) ->
     spyOn(hand, 'trigger').andCallThrough()
     hand.add(new Card({rank:1, suit:0}))
     expect(hand.trigger).not.toHaveBeenCalledWith('lose', hand)
+
+  it "discards cards to discard pile", ->
+    hand.discard()
+    expect(hand.length).toEqual(0)
+    expect(hand.discardPile.length).toEqual(2)
+
+  it "deals two new cards when 'deal' is called", ->
+    hand.discard()
+    hand.deal()
+    expect(hand.length).toEqual(2)
 
   describe "with blackjack", ->
     beforeEach ->
