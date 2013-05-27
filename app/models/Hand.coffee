@@ -24,12 +24,24 @@ class window.Hand extends Backbone.Collection
 
   check: ->
     if @length is 2 and @scores()[1] is 21
-      @trigger('blackjack')
+      @trigger('blackjack', @)
     else if(@scores().every (score) -> score > 21)
-      @trigger('lose', this)
+      @trigger('lose', @)
 
   stand: ->
-    @trigger('endTurn', this)
+    @trigger('endTurn', @)
+
+  getScoreMessage: ->
+    scores = @scores()
+    if(scores.length is 2)
+      if(scores[0] < 22 && scores[1] < 22)
+        return scores[0] + ' or ' + scores[1]
+      else
+        return scores[0]
+    else if(@at(0).get('revealed') is true)
+      return @getBestScore()
+    else
+      scores[0]
 
   getBestScore: ->
     scores = @scores()

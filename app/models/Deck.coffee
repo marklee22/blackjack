@@ -9,7 +9,12 @@ class window.Deck extends Backbone.Collection
         rank: card % 13
         suit: if card > 51 then 3 else Math.floor(card / 13)
 
-  dealPlayer: (discard) -> hand = new Hand [ @pop(), @pop() ], @, false, discard
+  dealPlayer: (discard) ->
+    new Hand [], @, false, discard
+    # hand = new Hand([], @, false, discard)
+    # hand.deal()
+    # hand
+
 
   dealDealer: (discard) -> new Hand [ @pop().flip(), @pop() ], @, true, discard
 

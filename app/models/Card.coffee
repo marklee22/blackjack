@@ -18,7 +18,7 @@ class window.Card extends Backbone.Model
     @
 
   makeBackground: (suit, rank) ->
-    offsetTop = 46
+    offsetTop = 47
     offsetLeft = 79
     gapHor = 8.4
     gapVer = 10.75

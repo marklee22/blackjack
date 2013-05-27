@@ -24,14 +24,14 @@
   float: left;
   background-image: url('../img/cards.jpg');
   border: solid 1px black;
-  width: 121px;
+  width: 119px;
   border-radius: 5px;
-  height: 173px;
+  height: 171px;
   margin-right: 20px;
   color: red;
 }
 
-.container {
+.content {
   padding-top: 30px;
   margin-left: 40px;
   margin-right: 40px;
@@ -45,6 +45,18 @@
 .hand {
   overflow: auto;
   width: 100%;
+}
+
+div.status-tied {
+  background-color: rgb(156, 156, 150);
+}
+
+div.status-won {
+  background-color: rgb(69, 156, 61);
+}
+
+div.status-lost {
+  background-color: rgb(209, 24, 24);
 }
 
 div.status {

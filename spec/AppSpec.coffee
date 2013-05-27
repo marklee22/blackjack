@@ -8,7 +8,7 @@ describe "App", ->
     spyOn(App.prototype, 'trigger').andCallThrough()
     app = new App()
 
-  it "listens to player 'endTurn'", ->
+  it "listens to player 'endTurn' and gives control to dealer", ->
     app.get('playerHand').stand()
     expect(app.dealerStart).toHaveBeenCalled()
     expect(app.get('isDealerTurn')).toBe(true)
@@ -17,33 +17,34 @@ describe "App", ->
     app.dealerStart()
     expect(app.get('dealerHand').every (card) -> card.get('revealed') is true).toBe(true)
 
-  it "listens to dealer 'endTurn'", ->
+  it "calls calculateWinner upon dealer ending his turn", ->
+    spyOn(app, 'calculateWinner').andCallThrough()
     app.dealerStart()
-    dealerHand = app.get('dealerHand')
-    expect(dealerHand.trigger).toHaveBeenCalledWith('endTurn', dealerHand)
+    expect(app.calculateWinner).toHaveBeenCalled()
+
+  it "sets status to 'win' if player has blackjack", ->
+    spyOn(app, 'calculateWinner').andCallThrough()
+    app.get('playerHand').trigger('blackjack')
+    expect(app.gameOver).toHaveBeenCalledWith(app.get('dealerHand'))
 
   describe "gameOver", ->
-
-    it "is called when dealerHand endTurn is triggered", ->
-      app.dealerStart()
-      expect(app.gameOver).toHaveBeenCalled()
 
     it "evaluates the player and dealer hands", ->
       expect(app.get('isGameOver')).toBe(false)
       app.gameOver()
       expect(app.get('isGameOver')).toBe(true)
 
-    it "sets the status for player loss", ->
+    it "sets the status to 'lost' for player loss", ->
       app.gameOver(app.get('playerHand'))
       expect(app.get('status')).toEqual('lost')
       expect(app.get('isGameOver')).toBe(true)
 
-    it "sets the status for player win", ->
+    it "sets the status to 'won' for player win", ->
       app.gameOver(app.get('dealerHand'))
       expect(app.get('status')).toEqual('won')
       expect(app.get('isGameOver')).toBe(true)
 
-    it "sets the status for tie", ->
+    it "sets the status to 'tie' for tie", ->
       app.gameOver()
       expect(app.get('status')).toEqual('tied')
       expect(app.get('isGameOver')).toBe(true)
@@ -68,17 +69,16 @@ describe "App", ->
       expect(app.get('dealerHand').length).toEqual(2)
       expect(app.get('dealerHand').at(0).get('revealed')).toBe(false)
 
-    it "called multiple times", ->
+    it "reuses the same deck and discard pile everytime it's called", ->
       app.newRound()
       app.newRound()
       expect(app.get('discardPile').length).toEqual(8)
       expect(app.get('deck').length).toEqual(40)
 
-    xit "sets isDealer turn to false", ->
-
-    xit "sets gameOver to false", ->
-
-    xit "preserves the same deck for the new game", ->
+    it "resets isDealer and isGameOver flags to false", ->
+      app.newRound()
+      expect(app.get('isGameOver')).toBe(false)
+      expect(app.get('isDealerTurn')).toBe(false)
 
   describe "dealer AI", ->
     dealer = null
@@ -98,7 +98,4 @@ describe "App", ->
       previousScore = dealer.scores()
       app.dealerStart()
       expect(dealer.scores()).toEqual(previousScore)
-
-    it "does weird shit with aces", ->
-      # TODO
 

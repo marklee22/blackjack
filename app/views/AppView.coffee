@@ -1,13 +1,13 @@
 class window.AppView extends Backbone.View
 
   template: _.template '
-  <div class="main"><div class="container">
-    <% if(!isDealerTurn && !isGameOver) { %> 
+  <div class="row-fluid main"><div class="span7 content">
+    <% if(!isDealerTurn && !isGameOver) { %>
       <button class="hit-button btn btn-danger">Hit</button> <button class="stand-button btn btn-success">Stand</button>
     <% } %>
     <% if(isGameOver) { %>
       <button class="new-round-button btn btn-info">New Round</button>
-      <div class="label-important status animated fadeIn">You <%= status %>!</div>
+      <div class="status status-<%= status %> animated fadeIn">You <%= status %>!</div>
     <% } %>
     <div class="player-hand-container"></div>
     <div class="dealer-hand-container"></div>

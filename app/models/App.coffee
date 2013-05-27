@@ -9,23 +9,27 @@ class window.App extends Backbone.Model
     @set 'isGameOver', false
     @set 'status', ''
     @set 'deck', deck = new Deck()
-    @set 'playerHand', deck.dealPlayer(discardPile)
+    @set 'playerHand', playerHand = deck.dealPlayer(discardPile)
     @set 'dealerHand', deck.dealDealer(discardPile)
 
     # Event triggers
     @get('playerHand').on 'lose', @gameOver, this
-    @get('dealerHand').on 'lose', @gameOver, this
+    # @get('dealerHand').on 'lose', @gameOver, this
     @get('playerHand').on 'blackjack', @blackJack, this
-    @get('dealerHand').on 'blackjack', @blackJack, this
+    # @get('dealerHand').on 'blackjack', @blackJack, this
     @get('playerHand').on 'endTurn', @dealerStart, this
-    @get('dealerHand').on 'endTurn', @calculateWinner, this
+    # @get('dealerHand').on 'endTurn', @calculateWinner, this
     @get('deck').on 'runningLow', @reshuffle, this
+
+    # method calls
+    playerHand.deal()
 
   calculateWinner: ->
     playerScore = @get('playerHand').getBestScore()
     dealerScore = @get('dealerHand').getBestScore()
 
-    if(playerScore > dealerScore)
+    # dealer doesn't triger lose event if he busts
+    if(dealerScore > 21 || playerScore > dealerScore)
       @gameOver(@get('dealerHand'))
     else if(dealerScore > playerScore)
       @gameOver(@get('playerHand'))
@@ -42,7 +46,7 @@ class window.App extends Backbone.Model
 
   gameOver: (hand) ->
     if(hand is @get('dealerHand'))
-      @set 'status', 'won' 
+      @set 'status', 'won'
     else if(hand is @get('playerHand'))
       @set 'status', 'lost'
     else
@@ -51,7 +55,7 @@ class window.App extends Backbone.Model
     @set 'isGameOver', true
 
   blackJack: ->
-    console.log('blackjack')
+    @gameOver(@get('dealerHand'))
 
   newRound: ->
     @get('playerHand').discard()
@@ -69,8 +73,7 @@ class window.App extends Backbone.Model
     @get('dealerHand').each (card) ->
       card.set('revealed', true)
 
-    while(score = @get('dealerHand').scores() < 17)
-      # TODO: account for dealer busting
+    while(score = @get('dealerHand').getBestScore() < 17)
       @get('dealerHand').hit()
 
-    @get('dealerHand').stand()
+    @calculateWinner()
